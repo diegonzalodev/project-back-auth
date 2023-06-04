@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Product 1",
+    "price": "45",
+    "code": "001",
+    "stock": "25",
+    "category": "Category 1",
+    "description": "This is product 1",
+    "thumbnail": "http://image.com"
+  },
+  {
+    "id": 2,
+    "title": "Product 2",
+    "price": "35",
+    "code": "002",
+    "stock": "14",
+    "category": "Category 2",
+    "description": "This is product 2",
+    "thumbnail": "http://image.com"
+  },
+  {
+    "id": 3,
+    "title": "Product 3",
+    "price": "45",
+    "code": "003",
+    "stock": "11",
+    "category": "Category 3",
+    "description": "This is product 3",
+    "thumbnail": "http://image.com"
+  },
+  {
+    "id": 4,
+    "title": "Product 4",
+    "price": "34",
+    "code": "004",
+    "stock": "5",
+    "category": "Category 4",
+    "description": "This is product 4",
+    "thumbnail": "http://image.com"
+  },
+  {
+    "id": 5,
+    "title": "Product 5",
+    "price": "105",
+    "code": "005",
+    "stock": "40",
+    "category": "Category 5",
+    "description": "This is product 5",
+    "thumbnail": "http://image.com"
+  },
+  {
+    "id": 6,
+    "title": "Product 6",
+    "price": "21",
+    "code": "006",
+    "stock": "13",
+    "category": "Category 6",
+    "description": "This is product 6",
+    "thumbnail": "http://image.com"
+  }
+]

@@ -1,0 +1,48 @@
+<div class="container mx-auto mt-4">
+  <div class="d-flex justify-content-between">
+    <div>
+      <h1>Welcome</h1>
+      <h2>Profile</h2>
+      <p class="fw-bold">First Name: <span class="fw-normal">{{user.first_name}}</span></p>
+      <p class="fw-bold">Last Name: <span class="fw-normal">{{user.last_name}}</span></p>
+      <p class="fw-bold">Email: <span class="fw-normal">{{user.email}}</span></p>
+      <p class="fw-bold">Role: <span class="fw-normal">{{user.role}}</span></p>
+    </div>
+    <div>
+      <form action="api/session/logout" method="POST">
+      <button class="btn btn-primary" type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
+  {{#if products.length}}
+    <h2 class="mt-3 text-center">Product List</h2>
+    {{#each products}}
+      <div class="product border border-primary mb-5 p-4 d-flex justify-content-between">
+        <div>
+          <h2>{{this.title}}</h2>
+          <p class="h5">Description: <span class="fw-normal">{{this.description}}</span></p>
+          <p class="h5">Category: <span class="fw-normal">{{this.category}}</span></p>
+          <p class="h5">Stock: <span class="fw-normal">{{this.stock}}</span></p>
+          <p class="h5">Price: <span class="fw-normal">${{this.price}}</span></p>
+          <form action="/api/carts" method="post">
+            <input type="hidden" name="productId" value="{{this._id}}" />
+            <button class="btn btn-outline-success mt-3" type="submit">Add to Cart</button>
+          </form>
+        </div>
+        <div class="w-100">
+          <img class="img-thumbnail" src={{this.thumbnail}} alt={{this.description}}>
+        </div>
+      </div>
+    {{/each}}
+    <div class="mb-5 d-flex justify-content-between pagination">
+      {{#if hasPrevPage}}
+        <a class="btn btn-secondary fs-5" href={{prevPage}}>Previous</a>
+      {{/if}}
+      {{#if hasNextPage}}
+        <a class="btn btn-secondary fs-5" href={{nextPage}}>Next</a>
+      {{/if}}
+    </div>
+  {{else}}
+    <h3 class="text-center">There are no products!</h3>
+  {{/if}}
+</div>

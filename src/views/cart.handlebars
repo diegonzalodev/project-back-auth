@@ -1,0 +1,17 @@
+{{#if cart}}
+  <div class="container mt-3">
+    <h1>Shopping Cart</h1>
+    <h2>ID Cart: {{cart._id}}</h2>
+    {{#if cart.products}}
+      <ul>
+        {{#each cart.products}}
+          <li>{{this.id}} - Quantity: {{this.quantity}}</li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>There are no products in the cart.</p>
+    {{/if}}
+  </div>
+{{else}}
+  <p>Cart not found.</p>
+{{/if}}

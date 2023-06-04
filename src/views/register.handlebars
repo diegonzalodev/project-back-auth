@@ -1,0 +1,24 @@
+<div>
+  <h1 class="text-center mt-4">Register</h1>
+  <div class="container mx-auto">
+    <form action="/api/session/register" method="POST">
+      <div class="form-group mb-3">
+        <label class="form-label">First Name:</label>
+        <input class="form-control" type="text" name="first_name" required>
+      </div>
+      <div class="form-group mb-3">
+        <label class="form-label">Last Name:</label>
+        <input class="form-control" type="text" name="last_name" required>
+      </div>
+      <div class="form-group mb-3">
+        <label class="form-label">Email:</label>
+        <input class="form-control" type="email" name="email" required>
+      </div>
+      <div class="form-group mb-3">
+        <label class="form-label">Password:</label>
+        <input class="form-control" type="password" name="password" required>
+      </div>
+      <input class="btn btn-primary" type="submit" value="Register my account">
+    </form>
+  </div>
+</div>
