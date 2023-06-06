@@ -4,7 +4,7 @@ class CartManagerMongo {
   async createCart() {
     try {
       const newCart = await cartModel.create({ products: [] });
-      return newCart.toObject();
+      return newCart;
     } catch (error) {
       throw new Error(error);
     }

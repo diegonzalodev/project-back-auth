@@ -1,7 +1,8 @@
 const passport = require("passport");
-const local = require("passport-local")
+const local = require("passport-local");
 const GithubStrategy = require("passport-github2");
 const { userModel } = require("../dao/mongodb/models/user.model");
+const { cartModel } = require("../dao/mongodb/models/cart.model");
 const { createHash, isValidPassword } = require("../utils/bcryptHash");
 
 const LocalStrategy = local.Strategy;
@@ -15,31 +16,37 @@ const initPassport = () => {
         usernameField: "email",
       },
       async (req, email, password, done) => {
-        const { first_name, last_name } = req.body;
+        const { first_name, last_name, age } = req.body;
         try {
           let userDB = await userModel.findOne({ email: email });
           if (userDB) return done(null, false);
-          let newUser = {
+          const newCart = await cartModel.create({ products: [] });
+          const newUser = await userModel.create({
             first_name,
             last_name,
-            email: email,
+            email,
+            age,
             password: createHash(password),
-          };
-          let result = await userModel.create(newUser);
-          return done(null, result);
+            cart: newCart._id,
+            role: email === "adminCoder@coder.com" ? "admin" : "user",
+          });
+          return done(null, newUser);
         } catch (error) {
           return done("An error occurred while getting the user" + error);
         }
       }
     )
   );
+
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
+
   passport.deserializeUser(async (id, done) => {
     let user = await userModel.findOne({ _id: id });
     done(null, user);
   });
+
   passport.use(
     "login",
     new LocalStrategy(
@@ -74,14 +81,20 @@ const initPassportGithub = () => {
         try {
           let user = await userModel.findOne({ email: profile._json.email });
           if (!user) {
-            let newUser = {
+            const newCart = await cartModel.create({ products: [] });
+            const newUser = await userModel.create({
               first_name: profile.username,
               last_name: profile.username,
               email: "diegodev@gmail.com",
               password: "",
-            };
-            let result = await userModel.create(newUser);
-            return done(null, result);
+              age: 18,
+              cart: newCart._id,
+              role:
+                "diegodev@gmail.com" === "adminCoder@coder.com"
+                  ? "admin"
+                  : "user",
+            });
+            return done(null, newUser);
           }
           return done(null, user);
         } catch (error) {
@@ -90,9 +103,11 @@ const initPassportGithub = () => {
       }
     )
   );
+
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
+
   passport.deserializeUser(async (id, done) => {
     let user = await userModel.findOne({ _id: id });
     done(null, user);

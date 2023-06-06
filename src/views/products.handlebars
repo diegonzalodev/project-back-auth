@@ -6,11 +6,13 @@
       <p class="fw-bold">First Name: <span class="fw-normal">{{user.first_name}}</span></p>
       <p class="fw-bold">Last Name: <span class="fw-normal">{{user.last_name}}</span></p>
       <p class="fw-bold">Email: <span class="fw-normal">{{user.email}}</span></p>
+      <p class="fw-bold">Age: <span class="fw-normal">{{user.age}}</span></p>
+      <p class="fw-bold">ID Cart: <span class="fw-normal">{{user.cart}}</span></p>
       <p class="fw-bold">Role: <span class="fw-normal">{{user.role}}</span></p>
     </div>
     <div>
       <form action="api/session/logout" method="POST">
-      <button class="btn btn-primary" type="submit">Logout</button>
+        <button class="btn btn-primary" type="submit">Logout</button>
       </form>
     </div>
   </div>
@@ -26,6 +28,9 @@
           <p class="h5">Price: <span class="fw-normal">${{this.price}}</span></p>
           <form action="/api/carts" method="post">
             <input type="hidden" name="productId" value="{{this._id}}" />
+            <input type="hidden" name="cartId" value="{{user.cart}}" />
+            <input type="hidden" name="quantity" value="1" />
+            <input type="hidden" name="product" value="{{this.productId}}" />
             <button class="btn btn-outline-success mt-3" type="submit">Add to Cart</button>
           </form>
         </div>

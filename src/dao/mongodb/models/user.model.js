@@ -5,18 +5,31 @@ const collection = "users-hash";
 const userSchema = new Schema({
   first_name: {
     type: String,
-    index: true,
+    required: true,
   },
   last_name: {
     type: String,
+    required: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
   },
+  age: {
+    type: Number,
+    required: true,
+  },
   password: {
     type: String,
+  },
+  cart: {
+    type: Schema.Types.ObjectId,
+    ref: "cartModel",
+  },
+  role: {
+    type: String,
+    default: "user",
   },
 });
 
