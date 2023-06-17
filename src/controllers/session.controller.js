@@ -1,11 +1,9 @@
-const { userModel } = require("../dao/mongodb/models/user.model");
+const { userModel } = require("../models/user.model");
 
 class SessionController {
   login = (req, res) => {
     if (!req.user)
-      return res
-        .status(401)
-        .send({ status: "error", message: "Invalid credentials" });
+      return res.status(401).send({ status: "error", message: "Invalid credentials" });
     req.session.user = {
       first_name: req.user.first_name,
       last_name: req.user.last_name,

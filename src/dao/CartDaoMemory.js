@@ -1,6 +1,6 @@
-const { cartModel } = require("./models/cart.model");
+const { cartModel } = require("../models/cart.model");
 
-class CartManagerMongo {
+class CartDaoMemory {
   async createCart() {
     try {
       const newCart = await cartModel.create({ products: [] });
@@ -95,4 +95,4 @@ class CartManagerMongo {
   }
 }
 
-module.exports = new CartManagerMongo();
+module.exports = CartDaoMemory;

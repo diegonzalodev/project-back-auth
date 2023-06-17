@@ -8,11 +8,12 @@ const session = require("express-session");
 const routerServer = require("./routes");
 const { connectDB } = require("./config/configServer.js");
 const { initPassport, initPassportGithub } = require("./config/passport.config.js");
-const { messageModel } = require("./dao/mongodb/models/message.model.js");
-const productManager = require("./dao/mongodb/ProductManagerMongo");
+const { messageModel } = require("./models/message.model.js");
+const productService = require("./service/index");
+require("dotenv").config();
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT;
 
 connectDB();
 
@@ -35,14 +36,14 @@ app.use(
   session({
     store: create({
       mongoUrl:
-        "mongodb+srv://diegonzalodev:diegonzalodev@cluster0.v0qmfgf.mongodb.net/ecommerce?retryWrites=true&w=majority",
+        process.env.MONGO_URL,
       mongoOptions: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
       ttl: 10000 * 60,
     }),
-    secret: "SecretCoder",
+    secret: process.env.SECRET_WORD,
     resave: false,
     saveUninitialized: false,
   })
@@ -58,10 +59,10 @@ socketServer.on("connection", async (socket) => {
   console.log("Client Connected", socket.id);
 
   socket.on("client:deleteProduct", async (pid) => {
-    const id = await productManager.getProductById(pid.id);
+    const id = await productService.getProductById(pid.id);
     if (id) {
-      await productManager.deleteProduct(pid.id);
-      const data = await productManager.getProducts();
+      await productService.deleteProduct(pid.id);
+      const data = await productService.getProducts();
       return socketServer.emit("newList", data);
     }
     const dataError = { status: "error", message: "Product Not found" };
@@ -69,7 +70,7 @@ socketServer.on("connection", async (socket) => {
   });
 
   socket.on("client:addProduct", async (data) => {
-    const addProduct = await productManager.addProduct(data);
+    const addProduct = await productService.addProduct(data);
     if (addProduct.status === "error") {
       let errorMessage = addProduct.message;
       socketServer.emit("server:producAdded", {
@@ -77,7 +78,7 @@ socketServer.on("connection", async (socket) => {
         errorMessage,
       });
     }
-    const newData = await productManager.getProducts();
+    const newData = await productService.getProducts();
     return socketServer.emit("server:productAdded", newData);
   });
 

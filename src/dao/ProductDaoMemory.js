@@ -1,6 +1,6 @@
-const { productModel } = require("./models/product.model");
+const { productModel } = require("../models/product.model");
 
-class ProductManagerMongo {
+class ProductDaoMemory {
   async addProduct(newProduct) {
     try {
       if (
@@ -96,4 +96,4 @@ class ProductManagerMongo {
   }
 }
 
-module.exports = new ProductManagerMongo();
+module.exports = ProductDaoMemory;

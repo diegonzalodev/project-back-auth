@@ -1,9 +1,8 @@
 const { Router } = require("express");
 const url = require("url");
-const productManager = require("../dao/mongodb/ProductManagerMongo");
-const { productModel } = require("../dao/mongodb/models/product.model.js");
-const cartManager = require("../dao/mongodb/CartManagerMongo");
-const { messageModel } = require("../dao/mongodb/models/message.model.js");
+const { cartService, productService } = require("../service/index");
+const { productModel } = require("../models/product.model.js");
+const { messageModel } = require("../models/message.model.js");
 
 const router = Router();
 
@@ -29,9 +28,8 @@ router.get("/products", async (req, res) => {
       sort,
       query,
     };
-    const result = await productManager.getPaginatedProducts(options);
-    const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } =
-      result;
+    const result = await productService.getPaginatedProducts(options);
+    const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
     if (page > totalPages) throw new Error("Page not found");
     const currentUrl = url.parse(req.url, true);
     delete currentUrl.search;
@@ -68,7 +66,7 @@ router.get("/products", async (req, res) => {
 
 router.get("/carts/:cid", async (req, res) => {
   try {
-    const cart = await cartManager.getCartById(req.params.cid);
+    const cart = await cartService.getCartById(req.params.cid);
     if (!cart) return res.send({ error: "There is no cart with this ID" });
     res.render("cart", { cart });
   } catch (error) {

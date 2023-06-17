@@ -1,6 +1,7 @@
 const { connect } = require("mongoose");
+require("dotenv").config();
 
-let url = "mongodb+srv://diegodev:diegodev@diegoscluster.5bsifpd.mongodb.net/ecommerce"
+let url = process.env.MONGO_URL
 
 module.exports = {
   connectDB: () => {
