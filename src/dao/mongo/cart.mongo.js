@@ -1,7 +1,7 @@
-const { cartModel } = require("../models/cart.model");
+const { cartModel } = require("../../models/cart.model");
 
-class CartDaoMemory {
-  async createCart() {
+class CartDaoMongo {
+  async create() {
     try {
       const newCart = await cartModel.create({ products: [] });
       return newCart;
@@ -10,7 +10,7 @@ class CartDaoMemory {
     }
   }
 
-  async getCartById(id) {
+  async getById(id) {
     try {
       const cart = await cartModel
         .findById(id)
@@ -31,7 +31,7 @@ class CartDaoMemory {
     }
   }
 
-  async saveCart(cart) {
+  async save(cart) {
     try {
       const updatedCart = await cartModel
         .findByIdAndUpdate(cart._id, cart, {
@@ -44,7 +44,7 @@ class CartDaoMemory {
     }
   }
 
-  async updateCart(cartId, products) {
+  async update(cartId, products) {
     try {
       const updatedCart = await cartModel
         .findByIdAndUpdate(cartId, { products }, { new: true })
@@ -70,7 +70,7 @@ class CartDaoMemory {
     }
   }
 
-  async deleteCart(cartId) {
+  async delete(cartId) {
     try {
       await cartModel.findByIdAndDelete(cartId);
       return { success: `Cart with ID ${cartId} deleted` };
@@ -95,4 +95,4 @@ class CartDaoMemory {
   }
 }
 
-module.exports = CartDaoMemory;
+module.exports = CartDaoMongo;

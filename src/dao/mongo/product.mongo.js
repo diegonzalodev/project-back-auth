@@ -1,7 +1,7 @@
-const { productModel } = require("../models/product.model");
+const { productModel } = require("../../models/product.model");
 
-class ProductDaoMemory {
-  async addProduct(newProduct) {
+class ProductDaoMongo {
+  async create(newProduct) {
     try {
       if (
         !newProduct.title ||
@@ -28,7 +28,7 @@ class ProductDaoMemory {
     }
   }
 
-  async getProducts() {
+  async getAll() {
     try {
       return await productModel.find({});
     } catch (err) {
@@ -36,7 +36,7 @@ class ProductDaoMemory {
     }
   }
 
-  async getProductById(pid) {
+  async getById(pid) {
     try {
       const product = await productModel.findById(pid);
       if (!product) return { error: "There is no product with this ID" };
@@ -46,7 +46,7 @@ class ProductDaoMemory {
     }
   }
 
-  async updateProduct(pid, updatedProduct) {
+  async update(pid, updatedProduct) {
     try {
       const product = await productModel.findById(pid);
       if (!product) return { error: "There is no product with this ID" };
@@ -58,7 +58,7 @@ class ProductDaoMemory {
     }
   }
 
-  async deleteProduct(pid) {
+  async delete(pid) {
     try {
       const product = await productModel.findByIdAndDelete(pid);
       if (!product) return { error: "There is no product with this ID" };
@@ -68,7 +68,7 @@ class ProductDaoMemory {
     }
   }
 
-  async getPaginatedProducts(options) {
+  async getPaginated(options) {
     try {
       const { limit, page, sort, query } = options;
       const skip = (page - 1) * limit;
@@ -96,4 +96,4 @@ class ProductDaoMemory {
   }
 }
 
-module.exports = ProductDaoMemory;
+module.exports = ProductDaoMongo;

@@ -20,12 +20,12 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
-  password: {
-    type: String,
-  },
   cart: {
     type: Schema.Types.ObjectId,
     ref: "cartModel",
+  },
+  password: {
+    type: String,
   },
   role: {
     type: String,

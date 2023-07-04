@@ -2,18 +2,16 @@ const express = require("express");
 const handlebars = require("express-handlebars");
 const { Server } = require("socket.io");
 const cookieParser = require("cookie-parser");
-const { create } = require("connect-mongo");
 const passport = require("passport");
-const session = require("express-session");
 const routerServer = require("./routes");
-const { connectDB } = require("./config/configServer.js");
-const { initPassport, initPassportGithub } = require("./config/passport.config.js");
-const { messageModel } = require("./models/message.model.js");
+const { port, connectDB } = require("./config/configServer");
+const { initPassport } = require("./passport-jwt/passport.config");
+const { messageModel } = require("./models/message.model");
 const productService = require("./service/index");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = port;
 
 connectDB();
 
@@ -32,26 +30,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/static", express.static(__dirname + "/public"));
 app.use(cookieParser("P@l@br@S3cr3t4"));
-app.use(
-  session({
-    store: create({
-      mongoUrl:
-        process.env.MONGO_URL,
-      mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-      ttl: 10000 * 60,
-    }),
-    secret: process.env.SECRET_WORD,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+
 initPassport();
-initPassportGithub();
 passport.use(passport.initialize());
-passport.use(passport.session());
 
 app.use(routerServer);
 

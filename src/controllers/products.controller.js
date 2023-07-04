@@ -12,7 +12,7 @@ class ProductsController {
       if (query) {
         filter.category = query;
       }
-      const products = await productService.getProducts(filter);
+      const products = await productService.getAll(filter);
       if (sort === "asc") {
         products.sort((a, b) => a.price - b.price);
       } else if (sort === "desc") {
@@ -55,16 +55,16 @@ class ProductsController {
 
   createProduct = async (req, res) => {
     try {
-      const addedProduct = await productService.addProduct(req.body);
+      const addedProduct = await productService.create(req.body);
       res.send(addedProduct);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
-  findByID = async (req, res) => {
+  getProductById = async (req, res) => {
     try {
-      const products = await productService.getProducts();
+      const products = await productService.getAll();
       const findByID = products.find((prod) => prod.id === req.params.pid);
       if (!findByID) return res.send({ error: "This product doesn't exist" });
       res.send(findByID);
@@ -75,7 +75,7 @@ class ProductsController {
 
   updateProduct = async (req, res) => {
     try {
-      const updatedProduct = await productService.updateProduct(
+      const updatedProduct = await productService.update(
         req.params.pid,
         req.body
       );
@@ -87,7 +87,7 @@ class ProductsController {
 
   deleteProduct = async (req, res) => {
     try {
-      const deletedProduct = await productService.deleteProduct(req.params.pid);
+      const deletedProduct = await productService.delete(req.params.pid);
       res.send(deletedProduct);
     } catch (error) {
       res.status(500).json({ error: error.message });
