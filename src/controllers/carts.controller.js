@@ -1,19 +1,15 @@
-const { response } = require("express");
-const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require("uuid");
-const {
-  cartService,
-  productService,
-  ticketService,
-} = require("../service/index");
+const { cartService, productService, ticketService } = require("../service/index");
 const { cartModel } = require("../models/cart.model");
 
 class CartsController {
   createCart = async (req, res) => {
     try {
       const { productId, quantity, cartId } = req.body;
-      const cart = await cartModel.findById(cartId);
-      if (!cart) return res.status(404).json({ error: "Cart not found" });
+      let cart = await cartModel.findById(cartId);
+      if (!cart) {
+        cart = await cartModel.create({});
+      }
       const existingProduct = cart.products.find(
         (product) => product.product.toString() === productId
       );
@@ -119,11 +115,8 @@ class CartsController {
       const productId = req.params.pid;
       const cart = await cartService.getById(cartId);
       if (!cart) return res.status(404).json({ error: "Cart not found" });
-      const productIndex = cart.products.findIndex(
-        (p) => p.id.toString() === productId
-      );
-      if (productIndex === -1)
-        return res.status(404).json({ error: "Product not found in Cart" });
+      const productIndex = cart.products.findIndex((p) => p.id.toString() === productId);
+      if (productIndex === -1) return res.status(404).json({ error: "Product not found in Cart" });
       cart.products.splice(productIndex, 1);
       const updatedCart = await cartService.save(cart);
       res.json({ status: "success", payload: updatedCart });
@@ -150,9 +143,7 @@ class CartsController {
         if (quantity > stock) {
           productNotPurchased.push(productId);
         } else {
-          const response = await productService.update(productId, {
-            quantity: stock - quantity,
-          });
+          const response = await productService.update(productId, { stock: stock - quantity });
           shoppableProducts.push({
             product: productId,
             quantity,
@@ -161,9 +152,11 @@ class CartsController {
           });
         }
       }
-
+    
       if (productNotPurchased.length > 0) {
-        update()
+        cart.products = cart.products.filter((item) => productNotPurchased.includes(item.product));
+        await cartService.save(cart);
+        return res.json({ productNotPurchased })
       } else {
         await cartService.delete(cid)
       }
@@ -174,20 +167,18 @@ class CartsController {
         const productAmount = price * quantity;
         return acc + productAmount;
       }, 0);
-      /* const ticket = await ticketService.create({
+
+      const ticket = await ticketService.create({
         code: uuidv4(),
         amount: totalAmount,
-        purchaser: req.user.email
-      }) */
+        purchaser: "usuario@dominio.com",
+      });
 
-      /* res.json({
+      res.json({
         status: "success",
         payload: {
           ticket: ticket,
         },
-      }); */
-      res.json({
-        status: "succes",
       });
     } catch (error) {
       res.status(500).json({ error: error.message });

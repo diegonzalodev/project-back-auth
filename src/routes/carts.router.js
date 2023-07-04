@@ -8,7 +8,7 @@ router.get("/:cid", cartsController.getCart);
 router.post("/:cid/purchase", cartsController.generateTicket);
 router.post("/:cid/product/:pid", cartsController.addProductToCart);
 router.put("/:cid", cartsController.updateCart);
-router.put("/:cid/products/:pid", cartsController.updateProductInCart);
+router.put("/:cid/product/:pid", cartsController.updateProductInCart);
 router.delete("/:cid", cartsController.deleteCart);
 router.delete("/:cid/product/:pid", cartsController.deleteProductInCart);
 
