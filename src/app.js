@@ -9,7 +9,6 @@ const { initPassport } = require("./passport-jwt/passport.config");
 const { messageModel } = require("./models/message.model");
 const { productService } = require("./service/index");
 const { passportAuth } = require('./passport-jwt/passportAuth')
-const { authorization } = require('./passport-jwt/passportAuthorization')
 require("dotenv").config();
 
 const app = express();
@@ -65,7 +64,7 @@ socketServer.on("connection", async (socket) => {
     return socketServer.emit("server:productAdded", newData);
   });
 
-  socket.on("chatMessage", passportAuth("jwt"), authorization("user"), async (data) => {
+  socket.on("chatMessage", passportAuth("jwt"), async (data) => {
     try {
       const newMessage = new messageModel({
         email: data.email,

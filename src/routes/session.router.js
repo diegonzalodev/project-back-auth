@@ -2,8 +2,6 @@ const { Router } = require("express");
 const sessionController = require("../controllers/session.controller");
 const { auth } = require("../middlewares/authentication.middleware");
 const { passportAuth } = require('../passport-jwt/passportAuth')
-const { authorization } = require('../passport-jwt/passportAuthorization')
-
 
 const router = Router();
 
