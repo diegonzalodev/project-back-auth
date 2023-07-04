@@ -3,7 +3,7 @@ const url = require("url");
 const { productModel } = require("../models/product.model.js");
 const { messageModel } = require("../models/message.model.js");
 const { cartService, productService } = require("../service/index");
-const { passportCall } = require("../passport-jwt/passportCall");
+const { passportAuth } = require("../passport-jwt/passportAuth.js");
 
 const router = Router();
 
@@ -15,7 +15,7 @@ router.get("/register", (req, res) => {
   res.render("register", {});
 });
 
-router.get("/products", passportCall("jwt"), async (req, res) => {
+router.get("/products", passportAuth("jwt"), async (req, res) => {
   try {
     const user = req.user;
     let { limit, page, sort, query } = req.query;

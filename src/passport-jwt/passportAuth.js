@@ -1,6 +1,6 @@
 const passport = require("passport");
 
-const passportCall = strategy => {
+const passportAuth = strategy => {
   return async (req, res, next) => {
     passport.authenticate(strategy, function (err, user, info) {
       if (err) return next(err)
@@ -12,5 +12,5 @@ const passportCall = strategy => {
 };
 
 module.exports = {
-  passportCall,
+  passportAuth,
 };

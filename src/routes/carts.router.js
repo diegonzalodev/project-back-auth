@@ -1,15 +1,17 @@
 const { Router } = require("express");
 const cartsController = require("../controllers/carts.controller");
+const { passportAuth } = require('../passport-jwt/passportAuth')
+const { authorization } = require('../passport-jwt/passportAuthorization')
 
 const router = Router();
 
-router.post("/", cartsController.createCart);
-router.get("/:cid", cartsController.getCart);
-router.post("/:cid/purchase", cartsController.generateTicket);
-router.post("/:cid/product/:pid", cartsController.addProductToCart);
-router.put("/:cid", cartsController.updateCart);
-router.put("/:cid/product/:pid", cartsController.updateProductInCart);
-router.delete("/:cid", cartsController.deleteCart);
-router.delete("/:cid/product/:pid", cartsController.deleteProductInCart);
+router.post("/", passportAuth("jwt"), cartsController.createCart);
+router.get("/:cid", passportAuth("jwt"), cartsController.getCart);
+router.post("/:cid/purchase", passportAuth("jwt"), cartsController.generateTicket);
+router.post("/:cid/product/:pid", passportAuth("jwt"), cartsController.addProductToCart);
+router.put("/:cid", passportAuth("jwt"), cartsController.updateCart);
+router.put("/:cid/product/:pid", passportAuth("jwt"), cartsController.updateProductInCart);
+router.delete("/:cid", passportAuth("jwt"), cartsController.deleteCart);
+router.delete("/:cid/product/:pid", passportAuth("jwt"), cartsController.deleteProductInCart);
 
 module.exports = router;

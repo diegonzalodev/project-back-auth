@@ -7,7 +7,9 @@ const routerServer = require("./routes");
 const { port, connectDB } = require("./config/configServer");
 const { initPassport } = require("./passport-jwt/passport.config");
 const { messageModel } = require("./models/message.model");
-const productService = require("./service/index");
+const { productService } = require("./service/index");
+const { passportAuth } = require('./passport-jwt/passportAuth')
+const { authorization } = require('./passport-jwt/passportAuthorization')
 require("dotenv").config();
 
 const app = express();
@@ -40,10 +42,10 @@ socketServer.on("connection", async (socket) => {
   console.log("Client Connected", socket.id);
 
   socket.on("client:deleteProduct", async (pid) => {
-    const id = await productService.getProductById(pid.id);
+    const id = await productService.getById(pid.id);
     if (id) {
       await productService.deleteProduct(pid.id);
-      const data = await productService.getProducts();
+      const data = await productService.getAll();
       return socketServer.emit("newList", data);
     }
     const dataError = { status: "error", message: "Product Not found" };
@@ -51,7 +53,7 @@ socketServer.on("connection", async (socket) => {
   });
 
   socket.on("client:addProduct", async (data) => {
-    const addProduct = await productService.addProduct(data);
+    const addProduct = await productService.create(data);
     if (addProduct.status === "error") {
       let errorMessage = addProduct.message;
       socketServer.emit("server:producAdded", {
@@ -59,11 +61,11 @@ socketServer.on("connection", async (socket) => {
         errorMessage,
       });
     }
-    const newData = await productService.getProducts();
+    const newData = await productService.getAll();
     return socketServer.emit("server:productAdded", newData);
   });
 
-  socket.on("chatMessage", async (data) => {
+  socket.on("chatMessage", passportAuth("jwt"), authorization("user"), async (data) => {
     try {
       const newMessage = new messageModel({
         email: data.email,

@@ -52,7 +52,7 @@ class SessionController {
   }
 
   current = (req, res) => {
-    res.json(req.session.user);
+    res.json(req.user);
   };
 
   logout = (req, res) => {
