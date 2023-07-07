@@ -8,7 +8,8 @@ const { port, connectDB } = require("./config/configServer");
 const { initPassport } = require("./passport-jwt/passport.config");
 const { messageModel } = require("./models/message.model");
 const { productService } = require("./service/index");
-const { passportAuth } = require('./passport-jwt/passportAuth')
+const { passportAuth } = require('./passport-jwt/passportAuth');
+const { errorHandler } = require("./middlewares/error.middleware");
 require("dotenv").config();
 
 const app = express();
@@ -36,6 +37,7 @@ initPassport();
 passport.use(passport.initialize());
 
 app.use(routerServer);
+app.use(errorHandler);
 
 socketServer.on("connection", async (socket) => {
   console.log("Client Connected", socket.id);

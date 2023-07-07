@@ -4,6 +4,7 @@ const { productModel } = require("../models/product.model.js");
 const { messageModel } = require("../models/message.model.js");
 const { cartService, productService } = require("../service/index");
 const { passportAuth } = require("../passport-jwt/passportAuth.js");
+const { generateProducts } = require("../utils/generateProducts.js");
 
 const router = Router();
 
@@ -30,7 +31,8 @@ router.get("/products", passportAuth("jwt"), async (req, res) => {
       query,
     };
     const result = await productService.getPaginated(options);
-    const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
+    const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } =
+      result;
     if (page > totalPages) throw new Error("Page not found");
     const currentUrl = url.parse(req.url, true);
     delete currentUrl.search;
@@ -91,6 +93,21 @@ router.get("/chat", async (req, res) => {
     res.render("chat", { messages });
   } catch (error) {
     console.error("Error fetching messages from DB:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/mockingproducts", async (req, res) => {
+  try {
+    let products = [];
+    for (let i = 0; i < 100; i++) {
+      products.push(generateProducts());
+    }
+    res.send({
+      status: "success",
+      payload: products,
+    });
+  } catch (error) {
     res.status(500).send("Internal Server Error");
   }
 });

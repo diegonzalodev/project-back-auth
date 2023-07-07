@@ -1,30 +1,29 @@
 const { productModel } = require("../../models/product.model");
+const { CustomError } = require("../../utils/CustomError/CustomError");
+const { EErrors } = require("../../utils/CustomError/EErrors");
+const { generateProductErrorInfo } = require("../../utils/CustomError/info");
 
 class ProductDaoMongo {
   async create(newProduct) {
     try {
-      if (
-        !newProduct.title ||
-        !newProduct.description ||
-        !newProduct.code ||
-        !newProduct.price ||
-        !newProduct.stock ||
-        !newProduct.category
-      )
-        return { error: "All fields are required" };
-
+      if (!newProduct.title || !newProduct.description || !newProduct.code || !newProduct.price || !newProduct.stock || !newProduct.category) {
+        CustomError.createError({
+          name: "Product creation error",
+          cause: generateProductErrorInfo(newProduct),
+          message: "Error trying to create the product",
+          code: EErrors.INVALID_TYPE_ERROR
+        })
+      }
       let verifyProduct = await productModel.findOne({ code: newProduct.code });
-      if (verifyProduct)
-        return { error: "A product with this code already exists" };
+      if (verifyProduct) return { error: "A product with this code already exists" };
 
-      let status =
-        newProduct.status === (undefined || " ") ? true : newProduct.status;
+      let status = newProduct.status === (undefined || " ") ? true : newProduct.status;
       let thumbnail = newProduct.thumbnail || " ";
       const product = new productModel({ ...newProduct, status, thumbnail });
       await product.save();
       return { success: "Product added", payload: product };
     } catch (error) {
-      return new Error(error);
+      throw error;
     }
   }
 
