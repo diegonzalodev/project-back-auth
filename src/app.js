@@ -39,7 +39,7 @@ initPassport();
 passport.use(passport.initialize());
 
 app.use(routerServer);
-// app.use(errorHandler);
+app.use(errorHandler);
 
 socketServer.on("connection", async (socket) => {
   console.log("Client Connected", socket.id);
