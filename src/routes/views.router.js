@@ -112,4 +112,18 @@ router.get("/mockingproducts", async (req, res) => {
   }
 });
 
+router.get("/loggerTest", async (req, res) => {
+  try {
+    req.logger.fatal("fatal");
+    req.logger.error("error");
+    req.logger.warning("warning");
+    req.logger.info("info");
+    req.logger.http("http");
+    req.logger.debug("debug");
+    res.send({ message: "Logger Test" })
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 module.exports = router;

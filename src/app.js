@@ -10,6 +10,7 @@ const { messageModel } = require("./models/message.model");
 const { productService } = require("./service/index");
 const { passportAuth } = require('./passport-jwt/passportAuth');
 const { errorHandler } = require("./middlewares/error.middleware");
+const loggerMidd = require("./middlewares/logger.middleware");
 require("dotenv").config();
 
 const app = express();
@@ -32,12 +33,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/static", express.static(__dirname + "/public"));
 app.use(cookieParser("P@l@br@S3cr3t4"));
+app.use(loggerMidd);
 
 initPassport();
 passport.use(passport.initialize());
 
 app.use(routerServer);
-app.use(errorHandler);
+// app.use(errorHandler);
 
 socketServer.on("connection", async (socket) => {
   console.log("Client Connected", socket.id);
